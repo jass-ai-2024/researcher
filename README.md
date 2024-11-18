@@ -5,9 +5,9 @@ Our main goal is to create a tool for researchers which will make the process ea
 It takes long time to find relevant and up-to-date information daily. Good to have brief overview of new tecnologies.
 
 ### Objectives
-- Objective 1
-- Objective 2
-- Objective 3
+- Objective 1: Simplify the process of recieving up-to-date information on daily basis
+- Objective 2: Asistance for the researcher on filtering the information
+- Objective 3: Guidance for the person to advice next steps
 
 ### Features
 - Feature 1: Summary of all papers that were released today.
