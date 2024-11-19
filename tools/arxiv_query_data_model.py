@@ -40,6 +40,7 @@ class ArxivQuery(BaseModel):
 class Paper(BaseModel):
     """Paper metadata structure"""
     title: str
+    semantic_score: float
     summary: str
     link: str
     authors: list[str]
