@@ -18,6 +18,11 @@ class HuggingFaceSearch:
         :param query: The search query that will be used
         :param total_pages: The total number of pages to return results (20 items per page)
         :return: List of dictionaries for models and datasets
+        Example:
+        [{'item_name': '/hilmansw/resnet18-catdog-classifier',
+        'item_link': 'https://huggingface.co/hilmansw/resnet18-catdog-classifier',
+        'item_read_me': 'https://huggingface.co/hilmansw/resnet18-catdog-classifier/blob/main/README.md?code=true',
+        'item_matches': '2 matches'}]
         """
 
         query = re.sub(r'\s+', '+', query)
@@ -38,5 +43,50 @@ class HuggingFaceSearch:
                        "item_matches": item_matches}
             total_pages -= 1
             page += 1
+
+    def get_possible_tasks_for_models(self):
+        """
+        Returns the list of possible tasks for models available on huggingface.co
+        :return: List of tasks
+        """
+        url = f"{self.hf_url}/models"
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content.decode('utf8'))
+
+        possible_tasks = []
+
+        for item in soup.find('section').find_all('a', href=True):
+            possible_tasks.append(item.attrs['href'].split('=')[1])
+        return possible_tasks
+
+    @staticmethod
+    def get_possible_sorting_options():
+        return ['trending', 'likes', 'downloads', 'created', 'modified']
+
+    def list_models_by_tasks(self, task, sort_by, search=None):
+        """Returns first page of results from available models on huggingface.co
+        :param task: Filter by possible tasks in machine learning
+        :param sort_by: Sorting of the search results, possible values - 'trending', 'likes', 'downloads', 'created', 'modified'
+        :param search: Search qwery that will be used, mostly look on model names
+        :return: List of information about relevant models
+        Example:
+        [{'model_name': 'openai/whisper-large-v2',
+        'last_updated': '2024-02-29T10:57:50',
+        'liked': '1.66k'}
+        """
+        url = f"{self.hf_url}/models?pipeline_tag={task}&sort={sort_by}"
+
+        if search:
+            url += f"&search={search}"
+
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content.decode('utf8'))
+
+        for model in soup.find_all('article'):
+            liked = model.find_all("svg")[-1].find_next_sibling(string=True).strip()
+
+            model_name = model.find('a').attrs['href'][1:]
+            timestamp = model.find('time').attrs['datetime']
+            yield {"model_name": model_name, "last_updated": timestamp, "liked": liked}
 
 
