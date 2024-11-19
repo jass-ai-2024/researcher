@@ -1,3 +1,4 @@
+# JASS
 ### Overview
 Our main goal is to create a tool for researchers which will make the process easier and simplify the way for getting up-to-date information.
 
@@ -50,4 +51,60 @@ At least two!
 
 ### Appendix
 Any additional information, references, or documents relevant to the project.
+
+
+# Setting Up Python Environment with `pip` and Running Code
+
+## 1. Creating a Virtual Environment
+
+1. Navigate to the project directory:
+   ```bash
+   cd /path/to/your/project
+   ```
+
+2. Create a virtual environment:
+   ```bash
+   python3 -m venv jass_researcher
+   ```
+
+3. Activate the virtual environment:
+   ```bash
+   source jass_researcher/bin/activate
+   ```
+
+## 2. Installing Dependencies
+
+Install dependencies:
+```bash
+pip install <package_name>
+```
+
+## 3. Freezing Dependencies
+
+Create `requirements.txt`:
+```bash
+pip freeze > requirements.txt
+```
+
+## 4. Installing Dependencies from `requirements.txt`
+
+Install all dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## 5. Running Python Code
+
+Activate the virtual environment:
+```bash
+source jass_researcher/bin/activate
+```
+
+Run a Python script:
+```bash
+python main.py
+```
+
+
+
 
