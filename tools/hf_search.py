@@ -14,11 +14,11 @@ class HuggingFaceSearch:
         """
         self.hf_url = hf_url
 
-    def huggingface_info_by_context(self, info_type, query, total_pages=1) -> list:
+    def huggingface_info_by_context(self, info_type: str, query: str, total_pages:int = 1) -> list:
         """
         Returns results from available models on huggingface.co
         :param info_type: Type of search, possible values - 'model', 'dataset', 'space'
-        :param query: The search query that will be used
+        :param query: The search query that will be used, keywords or sentence
         :param total_pages: The total number of pages to return results (20 items per page)
         :return: List of dictionaries for models and datasets
         Example:
@@ -47,7 +47,7 @@ class HuggingFaceSearch:
             total_pages -= 1
             page += 1
 
-    def get_possible_tasks_for_models(self):
+    def get_possible_tasks_for_models(self) -> list:
         """
         Returns the list of possible tasks for models available on huggingface.co
         :return: List of tasks
@@ -63,19 +63,19 @@ class HuggingFaceSearch:
         return possible_tasks
 
     @staticmethod
-    def get_possible_sorting_options():
+    def get_possible_sorting_options() -> list:
         return ['trending', 'likes', 'downloads', 'created', 'modified']
 
-    def list_models_by_tasks(self, task, sort_by, search=None):
+    def list_models_by_tasks(self, task: str, sort_by: str, search: str = None) -> list:
         """Returns first page of results from available models on huggingface.co
-        :param task: Filter by possible tasks in machine learning
+        :param task: Filter by possible tasks in machine learning. Can be received from get_possible_tasks_for_models
         :param sort_by: Sorting of the search results, possible values - 'trending', 'likes', 'downloads', 'created', 'modified'
         :param search: Search qwery that will be used, mostly look on model names
         :return: List of information about relevant models
         Example:
         [{'model_name': 'openai/whisper-large-v2',
         'last_updated': '2024-02-29T10:57:50',
-        'liked': '1.66k'}
+        'liked': '1.66k'}]
         """
         url = f"{self.hf_url}/models?pipeline_tag={task}&sort={sort_by}"
 
@@ -93,7 +93,7 @@ class HuggingFaceSearch:
             yield {"model_name": model_name, "last_updated": timestamp, "liked": liked}
 
     @staticmethod
-    def summarize_one_chunk(chunk):
+    def summarize_one_chunk(chunk: str) -> str:
         """
         Summarize one portion of text from the long page.
         :param chunk: Text portion that will be summarized
@@ -119,7 +119,7 @@ class HuggingFaceSearch:
             return None
 
     @staticmethod
-    def split_text_by_tokens(long_text, chunk_size=10000):
+    def split_text_by_tokens(long_text: str, chunk_size: int = 150000):
         """Splits a long text into portions with a maximum number of tokens.
         :param long_text: Long text to split
         :param chunk_size: Number of tokens in each portion.
@@ -134,7 +134,7 @@ class HuggingFaceSearch:
 
         return decoded_chunks
 
-    def summarize_page(self, page_url):
+    def summarize_page(self, page_url: str) -> str:
         """
         Summarize a page of text, originally developed for README files on huggingface.co
         :param page_url: Link to the page that needs to be summarized
