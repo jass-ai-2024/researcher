@@ -1,12 +1,18 @@
 """
 Data models for arxiv
 """
-from pydantic import BaseModel, Field
 from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class ArxivQuery(BaseModel):
     """Simple ArXiv query structure"""
+    all_fields: Optional[str] = Field(
+        None,
+        description="Search in all fields",
+        example='machine learning'
+    )
     title: Optional[str] = Field(
         None,
         description="Search in title (ti:)",
@@ -36,6 +42,7 @@ class ArxivQuery(BaseModel):
         description="Date range [YYYYMMDD TO YYYYMMDD]",
         example='submittedDate:[20230101 TO 20240101]'
     )
+
 
 class Paper(BaseModel):
     """Paper metadata structure"""

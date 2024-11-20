@@ -32,6 +32,8 @@ class ArXivSemanticSearch:
 
         # Build query string from ArxivQuery object
         query_parts = []
+        if query.all_fields:
+            query_parts.append(f'ti:"{query.all_fields}" OR abs:"{query.all_fields}"')
         if query.title:
             query_parts.append(f'ti:"{query.title}"')
         #if query.abstract:
