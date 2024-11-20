@@ -15,7 +15,7 @@ class PDFParser:
     """
 
     def __init__(self, pdf_url: str):
-        self.pdf_url = self.normalize_arxiv_link(pdf_url)
+        self.pdf_url = pdf_url
 
     @staticmethod
     def normalize_arxiv_link(url: str) -> str:
@@ -50,7 +50,8 @@ class PDFParser:
 
     def download_pdf(self) -> bytes:
         """Download PDF content from URL."""
-        response = requests.get(self.pdf_url)
+        url = self.normalize_arxiv_link(self.pdf_url)
+        response = requests.get(url)
         response.raise_for_status()
         return response.content
 
