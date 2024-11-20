@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Optional
 import requests
 from langchain_core.tools import tool
+from langchain_openai import OpenAIEmbeddings
 
 from tools.gh_search import search_github_repos
 from tools.hf_search import HuggingFaceSearch
+from tools.arxiv_search import ArXivSemanticSearch, ArxivQuery
 
 
 @tool
@@ -26,7 +28,7 @@ def generate_tasks_node(ml_service_information: str):
 @tool
 def hf_fetch_tool(info_type: str, query: str):
     """
-    Useful to retrieve information about a specific model or dataset from huggingface
+    Useful to retrieve information about pretrained models or datasets from huggingface
     Use only for tasks that require datasets or models!
         Returns results from available models on huggingface.co
         :param info_type: Type of search, possible values - 'model', 'dataset', 'space'
@@ -38,15 +40,16 @@ def hf_fetch_tool(info_type: str, query: str):
     return "Result of HF research: {}".format(result)
 
 @tool
-def github_fetch_tool(key_words: List[str], paper_name: str, top_k: int = 5, min_stars: int = 10):
+def github_fetch_tool(key_words: List[str], paper_name: str = "", top_k: int = 5, min_stars: int = 10):
     """
-    Useful to retrieve information about a specific implementation that could help in research.
+    Useful to retrieve information about a code implementations for a task that could help in research.
+    Very important for most of tasks.
     Searches for GitHub repositories based on provided keywords and paper name, and returns the top repositories
     filtered by the minimum number of stars.
 
     Args:
         key_words (List[str]): A list of keywords to include in the search.
-        paper_name (str): The name of the paper to include in the search.
+        paper_name (str): The name of the paper to include in the search if explicitly provided
         top_k (int): The number of top repositories to return. Default is 5.
         min_stars (int): The minimum number of stars a repository must have to be included. Default is 10.
 
@@ -55,5 +58,31 @@ def github_fetch_tool(key_words: List[str], paper_name: str, top_k: int = 5, min
     """
     result = search_github_repos(key_words, paper_name, top_k, min_stars)
     return "Github fetching results {}".format(result)
+
+
+@tool
+def arxic_fetch_tool(query: ArxivQuery):
+    """
+    Useful to retrieve information about arxiv papers that could be helpful for research.
+    Use it find SOTA implementations and analytical information
+    Perform semantic search on arXiv papers
+    :param query: Search query string
+    :param max_results: Maximum number of results to retrieve
+    :param similarity_threshold: Minimum cosine similarity to return results
+    :return: List of relevant papers sorted by semantic similarity
+    """
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-ada-002",  # This is the default and most cost-effective model
+        chunk_size=1000  # Number of texts to embed in each batch
+    )
+    arxic_search = ArXivSemanticSearch(embeddings)
+    try:
+        result = arxic_search.semantic_search(query, max_results=5,
+                                              similarity_threshold=0.5)
+    except ValueError as exc:
+        print(exc)
+        return "None Papers Found"
+
+    return "ArXiv fetching results {}".format(result)
 
 

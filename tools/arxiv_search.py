@@ -6,7 +6,7 @@ import xml.etree.ElementTree as et
 import requests
 from sklearn.metrics.pairwise import cosine_similarity
 
-from arxiv_query_data_model import ArxivQuery, Paper
+from tools.arxiv_query_data_model import ArxivQuery, Paper
 
 
 class ArXivSemanticSearch:
@@ -34,8 +34,8 @@ class ArXivSemanticSearch:
         query_parts = []
         if query.title:
             query_parts.append(f'ti:"{query.title}"')
-        if query.abstract:
-            query_parts.append(f'abs:"{query.abstract}"')
+        #if query.abstract:
+        #    query_parts.append(f'abs:"{query.abstract}"')
         if query.author:
             query_parts.append(f'au:"{query.author}"')
         if query.category:

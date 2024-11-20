@@ -13,11 +13,11 @@ class ArxivQuery(BaseModel):
         example='ti:"machine learning"'
     )
 
-    abstract: Optional[str] = Field(
-        None,
-        description="Search in abstract (abs:)",
-        example='abs:"neural networks"'
-    )
+    #abstract: Optional[str] = Field(
+    #    None,
+    #    description="Search in abstract (abs:)",
+    #    example='abs:"neural networks"'
+    #)
 
     author: Optional[str] = Field(
         None,

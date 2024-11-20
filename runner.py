@@ -5,7 +5,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.memory import ChatMessageHistory
 from prompt_config import SYSTEM_GUIDE, SYSTEM_ROLE, test_prompt
-from runner_tools import github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool
+from runner_tools import github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool, arxic_fetch_tool
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
@@ -22,13 +22,13 @@ def parse_list_tool(tasks: List[str]):
     """Useful to convert ML Research tasks to a python list and send them for a further analyse"""
     global TASKS
     max_len = len(tasks)
-    TASKS = tasks[:min(max_len, len(tasks))]
+    TASKS = tasks[:min(max_len, 3)]
     return "tasks were sucessfuly converted to python list"
 
 
 def get_tools():
     tools = [
-        parse_list_tool,github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool,
+        parse_list_tool,github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool, arxic_fetch_tool
     ]
     return tools
 
@@ -76,6 +76,8 @@ if __name__ == "__main__":
     session_id = "demo_user"
 
     res = chat(test_prompt, session_id)
+    print(len(TASKS))
+    print(TASKS)
     if TASKS is None:
         print(res)
         # TODO return

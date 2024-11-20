@@ -7,6 +7,7 @@ Some Rules:
 - If you get a ML service information, you shoud generate list of tasks for a up-to-date research
 - If you get a list of research tasks, you should send them to refining and processing
 - If you get a command to get useful data for a ML related research task, use ONLY suitable tools to provide one. If nothing to use, just return None
+- Almost every ML research task requires additional code, not only search in HF. Try to find code repos with suitable key words RELATED TO MODELS and TASK in general that could help to implement the project. Not jut any code.
 """
 
 test_prompt = """
