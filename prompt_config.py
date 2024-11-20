@@ -6,7 +6,7 @@ Some Rules:
 - If you get a service architecture as input, you should select only ml related information
 - If you get a ML service information, you shoud generate list of tasks for a up-to-date research
 - If you get a list of research tasks, you should send them to refining and processing
-- If you get a command to get useful data for a research task, use suitable tools to provide one if nothing to use, just return None
+- If you get a command to get useful data for a ML related research task, use ONLY suitable tools to provide one. If nothing to use, just return None
 """
 
 test_prompt = """

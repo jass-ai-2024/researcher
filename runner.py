@@ -21,7 +21,8 @@ TASKS = None
 def parse_list_tool(tasks: List[str]):
     """Useful to convert ML Research tasks to a python list and send them for a further analyse"""
     global TASKS
-    TASKS = tasks
+    max_len = len(tasks)
+    TASKS = tasks[:min(max_len, len(tasks))]
     return "tasks were sucessfuly converted to python list"
 
 
