@@ -7,8 +7,12 @@ Some Rules:
 - If you get a ML service information, you shoud generate list of tasks for a up-to-date research
 - If you get a list of research tasks, you should send them to refining and processing
 - If you get a command to get useful data for a ML related research task, use ONLY suitable tools to provide one. If nothing to use, just return None
-- Almost every ML research task requires additional code, not only search in HF. Try to find code repos with suitable key words RELATED TO MODELS and TASK in general that could help to implement the project. Not jut any code.
+- IF you guided to use specific source use only tool for this source
+- For arXiv tasks go to arXiv and search for potential papers that could be on arXiv realated to the topic. Try various search phrases if None Papers Found. Max 3 retries.
+- For GitHub tasks use keywords that look for arXiv papers and for potential code repositories with models and pipelines for this task.
 """
+
+#- Almost every ML research task requires additional code, not only search in HF. Try to find code repos with suitable key words RELATED TO MODELS and TASK in general that could help to implement the project. Not jut any code.
 
 test_prompt = """
 Сервис предназначен для автоматического определения, к какому классу относится загруженное изображение — к котикам или собакам.

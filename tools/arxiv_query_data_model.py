@@ -10,7 +10,7 @@ class ArxivQuery(BaseModel):
     """Simple ArXiv query structure"""
     all_fields: Optional[str] = Field(
         None,
-        description="Search in all fields",
+        description="Search in all fields. Short and arXiv specific phrase. max 3-5 words",
         example='machine learning'
     )
     title: Optional[str] = Field(

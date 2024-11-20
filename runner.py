@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
 
-llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=4000, temperature=0.5)
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=4000, temperature=0.2)
 
 CHAT_STORE = {}
 
@@ -87,4 +87,5 @@ if __name__ == "__main__":
 
     result_hf = chat(f"Sort tasks and results and provide top-5 most relevant for arxiv, repos, models, datasets and so on",
                      session_id)
+
     print(result_hf)

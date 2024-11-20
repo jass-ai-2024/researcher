@@ -78,11 +78,10 @@ def arxic_fetch_tool(query: ArxivQuery):
     arxic_search = ArXivSemanticSearch(embeddings)
     try:
         result = arxic_search.semantic_search(query, max_results=5,
-                                              similarity_threshold=0.5)
+                                              similarity_threshold=0.3)
     except ValueError as exc:
         print(exc)
         return "None Papers Found"
 
     return "ArXiv fetching results {}".format(result)
-
 
