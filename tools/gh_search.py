@@ -1,6 +1,6 @@
 import requests
 from typing import List, Dict, Any
-from utils_text_summary_tools import summarize_text, analyze_code
+from tools.utils_text_summary_tools import summarize_text, analyze_code
 from openai import OpenAI
 
 def get_repo_readme(owner: str, repo: str) -> str:

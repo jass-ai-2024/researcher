@@ -3,7 +3,7 @@ import requests
 from langchain_core.tools import tool
 from langchain_openai import OpenAIEmbeddings
 
-from tools.gh_search import search_github_repos
+from tools.gh_search import search_and_summary_gh_repos
 from tools.hf_search import HuggingFaceSearch
 from tools.arxiv_search import ArXivSemanticSearch, ArxivQuery
 
@@ -40,7 +40,7 @@ def hf_fetch_tool(info_type: str, query: str):
     return "Result of HF research: {}".format(result)
 
 @tool
-def github_fetch_tool(key_words: List[str], paper_name: str = "", top_k: int = 5, min_stars: int = 10):
+def github_fetch_tool(key_words: List[str], paper_name: str, top_k: int = 5, min_stars: int = 10):
     """
     Useful to retrieve information about a code implementations for a task that could help in research.
     Very important for most of tasks.
@@ -56,7 +56,7 @@ def github_fetch_tool(key_words: List[str], paper_name: str = "", top_k: int = 5
     Returns:
         List[Dict[str, Any]]: A list of dictionaries containing information about the top repositories.
     """
-    result = search_github_repos(key_words, paper_name, top_k, min_stars)
+    result = search_and_summary_gh_repos(key_words, paper_name, top_k, min_stars)
     return "Github fetching results {}".format(result)
 
 
