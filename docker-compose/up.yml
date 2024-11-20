@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  ml_pipeline:
+  agent:
     env_file: .env
     image: agent_researcher
     build:
       context: ..
       dockerfile: Dockerfile
-      target: ml_pipeline
+      target: base
     deploy:
       replicas: 1
     restart: no
