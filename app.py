@@ -9,14 +9,14 @@ app = FastAPI()
 
 class FromArch(BaseModel):
     text: str
+    id: int
 
 
 @app.post("/research")
 async def submit_text(request: FromArch):
     text = request.text
-    result = chat(a, session_id)
-    pass
-    # TODO return research result
+    result = some_logic()
+    return {"result": result, "id": request.id}
 
 
 if __name__ == "__main__":

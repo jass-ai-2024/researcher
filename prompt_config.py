@@ -1,20 +1,26 @@
+import os
+
 SYSTEM_ROLE = ("You are a researcher who helps to clarify process of development by providing information"
                " and useful insights for each service")
 SYSTEM_GUIDE = """
 Some Rules:
 - You always speak and think english. Any research is done in english
-- If you get a service architecture as input, you should select only ml related information
-- If you get a ML service information, you shoud generate list of tasks for a up-to-date research
-- If you get a list of research tasks, you should send them to refining and processing
-- If you get a command to get useful data for a ML related research task, use ONLY suitable tools to provide one. If nothing to use, just return None
-- IF you guided to use specific source use only tool for this source
-- For arXiv tasks go to arXiv and search for potential papers that could be on arXiv realated to the topic. Try various search phrases if None Papers Found. Max 3 retries.
-- For GitHub tasks use keywords that look for arXiv papers and for potential code repositories with models and pipelines for this task.
+- If you get a service architecture as input or a research task, you should select only ml related information and conduct a research.
+Research information:
+- Think of it like you have a business task and need to prepare information for specialist who will be implementing service.
+- You should make a Research plan (what to do) and what to include in the research.
+- Research should include arXiv papers for this task, SOTA model, datasets, and code repositories
+- Use internet search for arXiv and github. 
+- Come up with the best google query to find best asXiv papers
+- For specific pretrained models or datasets combine google and hugging face
+- As output you should provide summary with strict following structure:
+    1. ### ArXiv Papers
+    2. ### Github Links
+    3. ### Hugging Face Models
+    4. ### Hugging Face Datasets
 """
 
-#- Almost every ML research task requires additional code, not only search in HF. Try to find code repos with suitable key words RELATED TO MODELS and TASK in general that could help to implement the project. Not jut any code.
-
-test_prompt = """
+test_prompt2 = """
 Сервис предназначен для автоматического определения, к какому классу относится загруженное изображение — к котикам или собакам.
 Он должен быть надежным, масштабируемым и обеспечивать низкую задержку обработки.
 Компоненты архитектуры
@@ -34,3 +40,5 @@ test_prompt = """
 - Мониторинг и логирование
 Система для отслеживания состояния сервиса, производительности модели и анализа логов.
 """
+
+test_prompt = os.getenv("RESEARCH_PROMPT")

@@ -1,8 +1,9 @@
 import requests
 import time
 from typing import List, Dict, Any
-from tools.utils_text_summary_tools import summarize_text, analyze_code
-from openai import OpenAI
+
+from tools.utils_text_summary_tools import Summarizer
+
 
 def get_repo_readme(owner: str, repo: str) -> str:
     """
@@ -137,11 +138,11 @@ def summarize_repository(owner: str, repo: str, include_files: bool = True) -> D
         Dict[str, Any]: A dictionary containing the summaries of the README and optionally code analysis.
     """
     # Get README content
-    client = OpenAI()
     readme = get_repo_readme(owner, repo)
     if readme == "README not available":
         return {'readme_summary': "README not available"}
-    readme_summary = summarize_text(client, readme)
+    s = Summarizer("text")
+    readme_summary = s.summarize_text(readme)
 
     result = {
         'readme_summary': readme_summary,
@@ -151,10 +152,11 @@ def summarize_repository(owner: str, repo: str, include_files: bool = True) -> D
         # Get repository files
         files = get_repo_files(owner, repo)
         code_summaries = {}
+        s = Summarizer("code")
         for file in files:
             if file['type'] == 'file' and file['name'].endswith('.py'):  # Assuming Python files for code analysis
                 file_content = get_file_content(owner, repo, file['path'])
-                code_summary = analyze_code(client, file_content)
+                code_summary = s.summarize_text(file_content)
                 code_summaries[file['name']] = code_summary
         result['code_summaries'] = code_summaries
 

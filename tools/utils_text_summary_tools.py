@@ -47,7 +47,7 @@ class Summarizer:
         response = self.client.invoke(messages)
         return response.content.strip()
 
-    def summarize_text_pipeline(self, arxiv_url: str) -> dict:
+    def summarize_text_pipeline(self, arxiv_url: str) -> str:
         """
         Summarize the text from the given URL using OpenAI API.
 
@@ -61,10 +61,6 @@ class Summarizer:
         result = pdf_parser.process_pdf_url()
         text, links = result['text'], result['links']
 
-        summary = self.summarize_text(text)
+        summary = self.summarize_text(text) + f"\n Useful links to include in summary as GitHub link to this archive: {links}"
 
-        return {'summary': summary, 'links': links}
-
-
-summer = Summarizer()
-print(summer.summarize_text_pipeline("https://arxiv.org/pdf/2410.17832"))
+        return summary

@@ -43,7 +43,7 @@ class HuggingFaceSearch:
                     item_matches = item.find('header').find_all('div')[-1].text.replace('\n', ' ').replace('\t',
                                                                                                            ' ').strip()
 
-                    yield {"item_name": item_name, "item_link": item_link, "item_read_me": item_read_me,
+                    yield {"item_name": item_name, "item_link": item_link,
                            "item_matches": item_matches}
                 total_pages -= 1
                 page += 1
@@ -168,4 +168,4 @@ class HuggingFaceSearch:
             return self.summarize_one_chunk(readme_content)
         except requests.exceptions.RequestException as e:
             print(f"Error fetching README: {e}")
-            return None
+            return "No summary"

@@ -1,34 +1,53 @@
-from typing import List
+import os
 
+import requests
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.memory import ChatMessageHistory
 from prompt_config import SYSTEM_GUIDE, SYSTEM_ROLE, test_prompt
-from runner_tools import github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool, arxic_fetch_tool
+from runner_tools import ( select_ml_service_node,
+                          generate_tasks_node, hf_fetch_tool, hf_summary_tool,
+                          github_summary_tool, arxiv_summary_tool)
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
 
-llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=4000, temperature=0.2)
+
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=8000, temperature=0.3)
 
 CHAT_STORE = {}
 
-TASKS = None
-
 
 @tool
-def parse_list_tool(tasks: List[str]):
-    """Useful to convert ML Research tasks to a python list and send them for a further analyse"""
-    global TASKS
-    max_len = len(tasks)
-    TASKS = tasks[:min(max_len, 3)]
-    return "tasks were sucessfuly converted to python list"
+def google_search_tool(search_query: str):
+    """Useful to find information in internet for arXiv papers and Github repos"""
+    API_KEY = os.getenv("GOOGLE_API_KEY")
+    CX = os.getenv("GOOGLE_CX")
+
+    url = f"https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": API_KEY,
+        "cx": CX,
+        "q": search_query,
+    }
+
+    response = requests.get(url, params=params)
+
+    result = []
+    if response.status_code == 200:
+        data = response.json()
+        for item in data.get("items", []):
+            result.append({"title": item['title'], "link": item['link']})
+        return f"Result from google: {result}"
+    else:
+        return "Can't find anything"
 
 
 def get_tools():
     tools = [
-        parse_list_tool,github_fetch_tool, select_ml_service_node, generate_tasks_node, hf_fetch_tool, arxic_fetch_tool
+        select_ml_service_node, generate_tasks_node, hf_fetch_tool,
+        google_search_tool, hf_summary_tool, github_summary_tool, arxiv_summary_tool
     ]
     return tools
 
@@ -52,8 +71,8 @@ prompt = ChatPromptTemplate.from_messages(
 agent_executor = AgentExecutor(
     agent=create_tool_calling_agent(llm, get_tools(), prompt),
     tools=get_tools(),
-    verbose=True,
-    max_iterations=3,
+    verbose=False,
+    max_iterations=10,
     early_stopping_method="force"
 )
 
@@ -71,21 +90,20 @@ def chat(input, session_id):
     return res
 
 
-if __name__ == "__main__":
-    # Some DeepTech solutions :D
-    session_id = "demo_user"
+res = chat(test_prompt, "test")
+if "### ArXiv Papers" in res:
+    res = chat("To current summary add additional summary for arxiv links", "test")
 
-    res = chat(test_prompt, session_id)
-    print(len(TASKS))
-    print(TASKS)
-    if TASKS is None:
-        print(res)
-        # TODO return
-    else:
-        for task in TASKS:
-            chat(f"Get useful data for this specific task only if needed: {task}", session_id)
+if "### Hugging Face" in res:
+    res = chat("To current summary add additional summary"
+               " for each HuggingFace link and Usefull links on GitHub found in paper", "test")
 
-    result_hf = chat(f"Sort tasks and results and provide top-5 most relevant for arxiv, repos, models, datasets and so on",
-                     session_id)
 
-    print(result_hf)
+if "### Github Links" in res:
+    res = chat("To current summary add additional summary for github repositories", "test")
+
+print("End of execution...")
+print(res)
+with open("Research_result.md", 'w') as res_b:
+    res_b.write(res)
+    print("Saved Research to file Research_result.md")

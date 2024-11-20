@@ -1,0 +1,4 @@
+GOOGLE_API_KEY=<>
+GOOGLE_CX=<>
+OPENAI_API_KEY=<>
+RESEARCH_PROMPT='Мне нужен ресерч на тему диаризации спикеров, нужны самые свежие модели SOTA и метрики качества'

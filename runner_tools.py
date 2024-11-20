@@ -1,11 +1,10 @@
-from typing import List, Optional
-import requests
 from langchain_core.tools import tool
 from langchain_openai import OpenAIEmbeddings
 
-from tools.gh_search import search_and_summary_gh_repos
+from tools.gh_search import summarize_repository
 from tools.hf_search import HuggingFaceSearch
 from tools.arxiv_search import ArXivSemanticSearch, ArxivQuery
+from tools.utils_text_summary_tools import Summarizer
 
 
 @tool
@@ -40,25 +39,37 @@ def hf_fetch_tool(info_type: str, query: str):
     return "Result of HF research: {}".format(result)
 
 @tool
-def github_fetch_tool(key_words: List[str], paper_name: str, top_k: int = 5, min_stars: int = 10):
+def hf_summary_tool(page_url: str) -> str:
     """
-    Useful to retrieve information about a code implementations for a task that could help in research.
-    Very important for most of tasks.
-    Searches for GitHub repositories based on provided keywords and paper name, and returns the top repositories
-    filtered by the minimum number of stars.
-
-    Args:
-        key_words (List[str]): A list of keywords to include in the search.
-        paper_name (str): The name of the paper to include in the search if explicitly provided
-        top_k (int): The number of top repositories to return. Default is 5.
-        min_stars (int): The minimum number of stars a repository must have to be included. Default is 10.
-
-    Returns:
-        List[Dict[str, Any]]: A list of dictionaries containing information about the top repositories.
+            Summarize a page from HuggingFace by link
+            :param page_url: Link to the page that needs to be summarized
+            :return: Full summary of the page
     """
-    result = search_and_summary_gh_repos(key_words, paper_name, top_k, min_stars)
-    return "Github fetching results {}".format(result)
+    hf = HuggingFaceSearch()
+    return f"HF Summary: {hf.summarize_page(page_url)}"
 
+
+@tool
+def github_summary_tool(github_link: str):
+    """
+               Summarize a page from Github by link
+               :param github_link: Link to the page that needs to be summarized
+               :return: Full summary of the page
+    """
+    summary = summarize_repository(*github_link.split("/")[-2:])
+    return "Git summary: {}".format(summary)
+
+
+@tool
+def arxiv_summary_tool(arxiv_link: str):
+    """
+        Summarize a page from arXiv by link
+        :param arxiv_link: Link to the page that needs to be summarized
+        :return: Full summary of the page
+    """
+    summer = Summarizer()
+    result = summer.summarize_text_pipeline(arxiv_link)
+    return "ArXiv Summary: {}".format(result)
 
 @tool
 def arxic_fetch_tool(query: ArxivQuery):

@@ -28,6 +28,8 @@ class PDFParser:
         Returns:
             str: Normalized PDF link or None if invalid
         """
+        if url.endswith(".pdf"):
+            return url
         # Patterns to match different ArXiv link formats
         patterns = [
             r'https?://(?:www\.)?arxiv\.org/(?:abs|html|pdf)/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)',
