@@ -8,4 +8,5 @@ COPY utils /agent/utils
 COPY runner.py .
 COPY runner_tools.py .
 COPY prompt_config.py .
+COPY requirements.txt .
 RUN pip3 install -r requirements.txt
