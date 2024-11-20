@@ -3,6 +3,8 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
 
+from utils.pdf_parser import PDFParser
+
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -44,3 +46,25 @@ class Summarizer:
         messages = [{"role": "user", "content": self.prompt_generation() + text}]
         response = self.client.invoke(messages)
         return response.content.strip()
+
+    def summarize_text_pipeline(self, arxiv_url: str) -> dict:
+        """
+        Summarize the text from the given URL using OpenAI API.
+
+        Args:
+            arxiv_url (str): The URL to extract text from and summarize.
+        Returns:
+            str: The summary of the text from the given URL.
+        """
+        pdf_parser = PDFParser(arxiv_url)
+
+        result = pdf_parser.process_pdf_url()
+        text, links = result['text'], result['links']
+
+        summary = self.summarize_text(text)
+
+        return {'summary': summary, 'links': links}
+
+
+summer = Summarizer()
+print(summer.summarize_text_pipeline("https://arxiv.org/pdf/2410.17832"))
