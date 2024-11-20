@@ -129,8 +129,9 @@ class HuggingFaceSearch:
             return None
 
     @staticmethod
-    def split_text_by_tokens(long_text: str, chunk_size: int = 150000):
-        """Splits a long text into portions with a maximum number of tokens.
+    def split_text_by_tokens(long_text: str, chunk_size: int = 150000) -> list:
+        """
+        Splits a long text into portions with a maximum number of tokens.
         :param long_text: Long text to split
         :param chunk_size: Number of tokens in each portion.
         Returns:A list of text portions.
