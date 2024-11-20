@@ -15,7 +15,38 @@ class PDFParser:
     """
 
     def __init__(self, pdf_url: str):
-        self.pdf_url = pdf_url
+        self.pdf_url = self.normalize_arxiv_link(pdf_url)
+
+    @staticmethod
+    def normalize_arxiv_link(url: str) -> str:
+        """
+        Normalize ArXiv links to standard PDF format.
+
+        Args:
+            url (str): Input ArXiv link
+
+        Returns:
+            str: Normalized PDF link or None if invalid
+        """
+        # Patterns to match different ArXiv link formats
+        patterns = [
+            r'https?://(?:www\.)?arxiv\.org/(?:abs|html|pdf)/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)',
+            r'https?://ar5iv\.labs\.arxiv\.org/html/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)'
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, url)
+            if match:
+                # Extract the ID, removing any version suffix if needed
+                id_number = match.group(1)
+
+                # Remove version number if present
+                if 'v' in id_number:
+                    id_number = id_number.split('v')[0]
+
+                return f'https://arxiv.org/pdf/{id_number}'
+
+        return None
 
     def download_pdf(self) -> bytes:
         """Download PDF content from URL."""
