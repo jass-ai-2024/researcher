@@ -1,4 +1,5 @@
 import requests
+import time
 from typing import List, Dict, Any
 from tools.utils_text_summary_tools import summarize_text, analyze_code
 from openai import OpenAI
@@ -72,20 +73,23 @@ def search_github_repos(key_words: List[str], paper_name: str, top_k: int = 5, m
     """
     all_repos = []
 
-    # Perform search for the paper name
-    paper_query = f'"{paper_name}"'
-    paper_url = f'https://api.github.com/search/repositories?q={paper_query}'
-    paper_response = requests.get(paper_url)
-    paper_response.raise_for_status()
-    paper_data = paper_response.json()
-    paper_repos = paper_data['items'][:min_paper_repos]
-    # print(f"repos names for papers: {[repo['full_name'] for repo in paper_repos]}")
+    # Perform search for the paper name if it is not None or empty
+    paper_repos = []
+    if paper_name and paper_name.strip():
+        paper_query = f'"{paper_name}"'
+        paper_url = f'https://api.github.com/search/repositories?q={paper_query}'
+        paper_response = requests.get(paper_url)
+        paper_response.raise_for_status()
+        paper_data = paper_response.json()
+        paper_repos = paper_data['items'][:min_paper_repos]
+        # print(f"repos names for papers: {[repo['full_name'] for repo in paper_repos]}")
 
     # Perform separate searches for each keyword
     keyword_repos = []
     for term in key_words:
         query = f'"{term}"'
         url = f'https://api.github.com/search/repositories?q={query}'
+        time.sleep(0.5)  # Rate limiting
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
@@ -99,7 +103,7 @@ def search_github_repos(key_words: List[str], paper_name: str, top_k: int = 5, m
     sorted_repos = sorted(filtered_repos, key=lambda x: x['stargazers_count'], reverse=True)
 
     # Select top_k repositories
-    top_repos = sorted_repos[:top_k-min_paper_repos]
+    top_repos = sorted_repos[:top_k - len(paper_repos)]
     top_repos.extend(paper_repos)
 
     # Extract relevant information and README content
@@ -188,7 +192,8 @@ def search_and_summary_gh_repos(key_words: List[str], paper_name: str, top_k: in
 if __name__ == "__main__":
     params = {
         'key_words': ['image classification', 'cats and dogs', 'pre-trained model'], 
-        'paper_name': 'Image Classification of Cats and Dogs', 
+        # 'paper_name': 'Image Classification of Cats and Dogs', 
+        'paper_name': '', 
         'top_k': 5,
         'min_stars': 10,
         'min_paper_repos': 3
