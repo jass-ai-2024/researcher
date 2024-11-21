@@ -12,3 +12,5 @@ services:
       replicas: 1
     restart: no
     command: python3 app.py
+    volumes:
+      - /tmp/jass:/tmp/jass
