@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  agent:
+    env_file: .env
+    image: agent_researcher
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: base
+    deploy:
+      replicas: 1
+    restart: no
+    command: python3 app.py
+    volumes:
+      - /tmp/jass/research:/tmp/jass/research
