@@ -1,47 +1,17 @@
-import os
-
-import requests
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.memory import ChatMessageHistory
-from prompt_config import SYSTEM_GUIDE, SYSTEM_ROLE, test_prompt
-from runner_tools import ( select_ml_service_node,
+from prompt_config import SYSTEM_GUIDE, SYSTEM_ROLE
+from runner_tools import (select_ml_service_node,
                           generate_tasks_node, hf_fetch_tool, hf_summary_tool,
-                          github_summary_tool, arxiv_summary_tool)
+                          github_summary_tool, arxiv_summary_tool, google_search_tool)
 from langchain_openai import ChatOpenAI
-from langchain_core.tools import tool
-
 
 
 llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=8000, temperature=0.3)
 
 CHAT_STORE = {}
-
-
-@tool
-def google_search_tool(search_query: str):
-    """Useful to find information in internet for arXiv papers and Github repos"""
-    API_KEY = os.getenv("GOOGLE_API_KEY")
-    CX = os.getenv("GOOGLE_CX")
-
-    url = f"https://www.googleapis.com/customsearch/v1"
-    params = {
-        "key": API_KEY,
-        "cx": CX,
-        "q": search_query,
-    }
-
-    response = requests.get(url, params=params)
-
-    result = []
-    if response.status_code == 200:
-        data = response.json()
-        for item in data.get("items", []):
-            result.append({"title": item['title'], "link": item['link']})
-        return f"Result from google: {result}"
-    else:
-        return "Can't find anything"
 
 
 def get_tools():

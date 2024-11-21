@@ -13,4 +13,4 @@ services:
     restart: no
     command: python3 app.py
     volumes:
-      - /tmp/jass:/tmp/jass
+      - /tmp/jass/research:/tmp/jass/research

@@ -1,3 +1,6 @@
+import os
+
+import requests
 from langchain_core.tools import tool
 from langchain_openai import OpenAIEmbeddings
 
@@ -96,3 +99,27 @@ def arxic_fetch_tool(query: ArxivQuery):
 
     return "ArXiv fetching results {}".format(result)
 
+
+@tool
+def google_search_tool(search_query: str):
+    """Useful to find information in internet for arXiv papers and Github repos"""
+    API_KEY = os.getenv("GOOGLE_API_KEY")
+    CX = os.getenv("GOOGLE_CX")
+
+    url = f"https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": API_KEY,
+        "cx": CX,
+        "q": search_query,
+    }
+
+    response = requests.get(url, params=params)
+
+    result = []
+    if response.status_code == 200:
+        data = response.json()
+        for item in data.get("items", []):
+            result.append({"title": item['title'], "link": item['link']})
+        return f"Result from google: {result}"
+    else:
+        return "Can't find anything"

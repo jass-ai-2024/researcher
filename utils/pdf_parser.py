@@ -33,7 +33,8 @@ class PDFParser:
         # Patterns to match different ArXiv link formats
         patterns = [
             r'https?://(?:www\.)?arxiv\.org/(?:abs|html|pdf)/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)',
-            r'https?://ar5iv\.labs\.arxiv\.org/html/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)'
+            r'https?://ar5iv\.labs\.arxiv\.org/html/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)',
+            r'https?://ar5iv\.labs\.arxiv\.org/abs/([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)'
         ]
 
         for pattern in patterns:

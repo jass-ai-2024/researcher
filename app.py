@@ -2,7 +2,7 @@ import time
 import os
 from runner import get_res
 
-VOLUME = os.getenv("VOLUME", "/tmp/jass")
+VOLUME = os.getenv("VOLUME", "/tmp/jass/research")
 processed_ids = set()
 
 while True:
