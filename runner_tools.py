@@ -71,7 +71,10 @@ def arxiv_summary_tool(arxiv_link: str):
         :return: Full summary of the page
     """
     summer = Summarizer()
-    result = summer.summarize_text_pipeline(arxiv_link)
+    try:
+        result = summer.summarize_text_pipeline(arxiv_link)
+    except Exception as e:
+        return "Can't return arXiv summary"
     return "ArXiv Summary: {}".format(result)
 
 @tool
