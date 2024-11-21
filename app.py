@@ -8,4 +8,5 @@ while True:
     # Current task id???
     PROMPT = "Some Prompt"
     save_dir = "volume/research_1.txt"
-    get_res(PROMPT, save_dir)
+    id_ = "1"
+    get_res(PROMPT, save_dir, id_)
