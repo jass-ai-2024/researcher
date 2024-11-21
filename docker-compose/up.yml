@@ -11,4 +11,4 @@ services:
     deploy:
       replicas: 1
     restart: no
-    command: python3 runner.py
+    command: python3 app.py

@@ -90,20 +90,22 @@ def chat(input, session_id):
     return res
 
 
-res = chat(test_prompt, "test")
-if "### ArXiv Papers" in res:
-    res = chat("To current summary add additional summary for arxiv links", "test")
+def get_res(prompt, save_dir):
+    res = chat(prompt, "test")
+    if "### ArXiv Papers" in res:
+        res = chat("To current summary add additional summary for arxiv links", "test")
 
-if "### Hugging Face" in res:
-    res = chat("To current summary add additional summary"
-               " for each HuggingFace link and Usefull links on GitHub found in paper", "test")
+    if "### Hugging Face" in res:
+        res = chat("To current summary add additional summary"
+                   " for each HuggingFace link and Usefull links on GitHub found in paper", "test")
 
 
-if "### Github Links" in res:
-    res = chat("To current summary add additional summary for github repositories", "test")
+    if "### Github Links" in res:
+        res = chat("To current summary add additional summary for github repositories", "test")
 
-print("End of execution...")
-print(res)
-with open("Research_result.md", 'w') as res_b:
-    res_b.write(res)
-    print("Saved Research to file Research_result.md")
+    print("End of execution...")
+    print(res)
+    with open(save_dir, 'w') as res_b:
+        res_b.write(res)
+        print(f"Saved Research to {save_dir}")
+

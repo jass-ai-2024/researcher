@@ -1,23 +1,11 @@
-from fastapi import FastAPI
-import uvicorn
-from pydantic import BaseModel
-
-from runner import chat
-
-app = FastAPI()
+from runner import get_res
 
 
-class FromArch(BaseModel):
-    text: str
-    id: int
-
-
-@app.post("/research")
-async def submit_text(request: FromArch):
-    text = request.text
-    result = some_logic()
-    return {"result": result, "id": request.id}
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+while True:
+    # Here we search for files in volume from architects
+    # If find one, Parse their file as PROMPT
+    # Save_dit = Path to volume + research_<current_task_id>
+    # Current task id???
+    PROMPT = "Some Prompt"
+    save_dir = "volume/research_1.txt"
+    get_res(PROMPT, save_dir)
