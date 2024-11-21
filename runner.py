@@ -71,7 +71,7 @@ prompt = ChatPromptTemplate.from_messages(
 agent_executor = AgentExecutor(
     agent=create_tool_calling_agent(llm, get_tools(), prompt),
     tools=get_tools(),
-    verbose=False,
+    verbose=True,
     max_iterations=10,
     early_stopping_method="force"
 )

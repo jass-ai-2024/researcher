@@ -2,7 +2,7 @@ import time
 import os
 from runner import get_res
 
-VOLUME = os.getenv("VOLUME", "tmp/jass")
+VOLUME = os.getenv("VOLUME", "/tmp/jass")
 processed_ids = set()
 
 while True:
@@ -18,4 +18,4 @@ while True:
             result_path = os.path.join(VOLUME, result_filename)
             get_res(prompt_content, result_path, task_id)
             processed_ids.add(task_id)
-    time.sleep(30)
+    time.sleep(10)
