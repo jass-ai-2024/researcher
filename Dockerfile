@@ -9,4 +9,5 @@ COPY runner.py .
 COPY runner_tools.py .
 COPY prompt_config.py .
 COPY requirements.txt .
+COPY app.py .
 RUN pip3 install -r requirements.txt
